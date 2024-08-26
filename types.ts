@@ -22,6 +22,3 @@ export type RootStackParamList = {
 
 export type RootNavigationProp<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
-
-// export type RootNavigationProp<T extends keyof RootStackParamList> =
-//   NativeStackNavigationProp<RootStackParamList, T>;

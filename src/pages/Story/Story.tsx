@@ -22,7 +22,11 @@ const data: TStory[] = [
     createdAt: moment().subtract(2, 'hours').fromNow(),
     stories: [
       {id: 'story1', url: 'https://i.ibb.co/9HhhmF7/image.png', type: 'image'},
-      {id: 'story2', url: 'https://i.ibb.co/xyz.png', type: 'image'},
+      {
+        id: 'story2',
+        url: 'https://i.ibb.co/Yf93Lfb/story-image2.png',
+        type: 'image',
+      },
     ],
   },
   {
@@ -37,40 +41,47 @@ const data: TStory[] = [
         url: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
       },
+      {
+        id: 'story2',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        type: 'video',
+      },
     ],
   },
   {
     id: '3',
     name: 'Arlene',
-    image: 'https://images.unsplash.com/photo-1724277228191-0cf4c80ee56f?q=80',
+    image:
+      'https://images.unsplash.com/photo-1551742446-4a9e02b95b47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     createdAt: moment().subtract(6, 'hours').fromNow(), // 6 hours ago
     stories: [
       {
         id: 'story1',
-        url: 'https://images.unsplash.com/photo-1724277228191-0cf4c80ee56f?q=80',
+        url: 'https://images.unsplash.com/photo-1551742446-4a9e02b95b47?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
       },
       {
         id: 'story2',
-        url: 'https://images.unsplash.com/photo-6543210987654-bcdefabcdef?q=80',
-        type: 'image',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        type: 'video',
       },
     ],
   },
   {
     id: '4',
     name: 'Kyle',
-    image: 'https://images.unsplash.com/photo-1724579243894-6a8c9bbfe88c',
+    image:
+      'https://images.unsplash.com/photo-1542219550-874e571b4196?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     createdAt: moment().subtract(8, 'hours').fromNow(), // 8 hours ago
     stories: [
       {
         id: 'story1',
-        url: 'https://images.unsplash.com/photo-1724579243894-6a8c9bbfe88c',
+        url: 'https://images.unsplash.com/photo-1542219550-874e571b4196?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
       },
       {
         id: 'story2',
-        url: 'https://images.unsplash.com/photo-abcdef0123456-bcdefabcdef?q=80',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
         type: 'video',
       },
     ],
@@ -89,25 +100,26 @@ const data: TStory[] = [
       },
       {
         id: 'story2',
-        url: 'https://images.unsplash.com/photo-6543210987654-bcdefabcdef?q=80',
-        type: 'image',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        type: 'video',
       },
     ],
   },
   {
     id: '6',
     name: 'Victoria',
-    image: 'https://images.unsplash.com/photo-1724579242641-82dd80f13ca5',
+    image:
+      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     createdAt: moment().subtract(12, 'hours').fromNow(), // 12 hours ago
     stories: [
       {
         id: 'story1',
-        url: 'https://images.unsplash.com/photo-1724579242641-82dd80f13ca5',
+        url: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
       },
       {
         id: 'story2',
-        url: 'https://images.unsplash.com/photo-abcdef0123456-bcdefabcdef?q=80',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
         type: 'video',
       },
     ],
@@ -115,23 +127,23 @@ const data: TStory[] = [
   {
     id: '7',
     name: 'Collin',
-    image: 'https://plus.unsplash.com/premium_photo-1669050703458-10993eb8fe6d',
+    image:
+      'https://plus.unsplash.com/premium_photo-1669050703458-10993eb8fe6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
     createdAt: moment().subtract(14, 'hours').fromNow(), // 14 hours ago
     stories: [
       {
         id: 'story1',
-        url: 'https://plus.unsplash.com/premium_photo-1669050703458-10993eb8fe6d',
+        url: 'https://plus.unsplash.com/premium_photo-1669050703458-10993eb8fe6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
       },
       {
         id: 'story2',
-        url: 'https://plus.unsplash.com/photo-abcdef0123456-bcdefabcdef?q=80',
-        type: 'image',
+        url: 'https://www.w3schools.com/html/movie.mp4',
+        type: 'video',
       },
     ],
   },
 ];
-
 export const Story = ({navigation}: RootNavigationProp<'Story'>) => {
   const renderItem = ({item, index}: {item: TStory; index: number}) => (
     <View style={styles.storyContainer}>

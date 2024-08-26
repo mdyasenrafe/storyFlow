@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {RootNavigationProp} from '../../../types';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {LinearGradient} from 'expo-linear-gradient';
+
 const {width, height} = Dimensions.get('window');
 
 export const StoryViewer = ({
@@ -49,14 +52,33 @@ export const StoryViewer = ({
           <Text style={styles.videoText}>Video Placeholder</Text>
         </View>
       )}
-      <Text style={styles.text}>{storyData[currentIndex].name}</Text>
-      <Text style={styles.timeText}>{storyData[currentIndex].createdAt}</Text>
+
+      {/* Story Progress Indicator */}
+      <LinearGradient
+        colors={['#FF0000', '#FF0000', '#FF0000']}
+        style={styles.progressBar}
+      />
+
+      {/* Header Section */}
+      <View style={styles.header}>
+        <Image
+          source={{uri: storyData[currentIndex].image}}
+          style={styles.profileImage}
+        />
+        <View style={styles.headerText}>
+          <Text style={styles.name}>{storyData[currentIndex].name}</Text>
+          <Text style={styles.timeText}>
+            {storyData[currentIndex].createdAt}
+          </Text>
+        </View>
+      </View>
+
       <TouchableOpacity
         style={styles.closeButton}
         onPress={() => navigation.goBack()}>
         <Ionicons name="close" size={30} color="white" />
       </TouchableOpacity>
-      {/* Swipe Gestures */}
+
       <TouchableOpacity
         style={styles.leftSwipe}
         onPress={() => handleSwipe('right')}
@@ -78,12 +100,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: height * 0.8,
-    resizeMode: 'contain',
+    height: height,
+    resizeMode: 'cover',
   },
   videoPlaceholder: {
     width: width,
-    height: height * 0.8,
+    height: height,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'gray',
@@ -92,15 +114,49 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  text: {
+  progressBar: {
+    position: 'absolute',
+    top: 80,
+    height: 4,
+    width: width,
+    borderRadius: 4,
+  },
+  header: {
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: width - 20,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  headerText: {
+    marginLeft: 10,
+    flex: 1,
+  },
+  name: {
     color: 'white',
-    fontSize: 18,
-    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   timeText: {
     color: 'white',
-    fontSize: 14,
-    marginTop: 5,
+    fontSize: 12,
+  },
+  viewsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  viewsText: {
+    color: 'white',
+    fontSize: 12,
+    marginLeft: 4,
   },
   closeButton: {
     position: 'absolute',
