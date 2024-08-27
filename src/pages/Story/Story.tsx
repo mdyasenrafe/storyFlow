@@ -22,6 +22,11 @@ const data: TStory[] = [
     createdAt: moment().subtract(2, 'hours').fromNow(),
     stories: [
       {id: 'story1', url: 'https://i.ibb.co/9HhhmF7/image.png', type: 'image'},
+      {
+        id: 'story2',
+        url: 'https://images.unsplash.com/photo-1724581703441-3927a7b6d824?q=80&w=2865&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        type: 'image',
+      },
     ],
   },
   {

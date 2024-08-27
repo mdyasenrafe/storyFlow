@@ -42,7 +42,7 @@ export const StoryViewer = ({
 
   const startProgressBar = () => {
     Animated.timing(progressBarWidths[currentStoryIndex], {
-      toValue: width / numStories - 4,
+      toValue: width / numStories - 16,
       duration: 10000, // 10 seconds
       useNativeDriver: false,
     }).start();
@@ -87,7 +87,7 @@ export const StoryViewer = ({
             style={[
               styles.progressBarWrapper,
               {
-                width: width / numStories,
+                width: (width - 32) / numStories,
               },
             ]}>
             <View
@@ -173,6 +173,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
   },
   progressBarWrapper: {
     height: 4,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: 120,
+    top: 100,
     left: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -217,7 +219,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 120,
+    top: 100,
     right: 20,
     zIndex: 123,
   },
