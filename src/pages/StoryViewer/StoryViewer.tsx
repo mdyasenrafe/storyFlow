@@ -22,7 +22,10 @@ export const StoryViewer = ({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
   const currentStory = storyData[currentIndex].stories[currentStoryIndex];
-  const progressBarWidth = useRef(new Animated.Value(0)).current;
+  const numStories = storyData[currentIndex].stories.length;
+  const progressBarWidths = useRef(
+    storyData[currentIndex].stories.map(() => new Animated.Value(0)),
+  ).current;
 
   useEffect(() => {
     startProgressBar();
@@ -33,20 +36,20 @@ export const StoryViewer = ({
 
     return () => {
       clearTimeout(timer);
-      progressBarWidth.setValue(0); // Reset the progress bar when unmounting
+      progressBarWidths.forEach(progressBar => progressBar.setValue(0)); // Reset the progress bars when unmounting
     };
   }, [currentStoryIndex, currentIndex]);
 
   const startProgressBar = () => {
-    Animated.timing(progressBarWidth, {
-      toValue: width,
+    Animated.timing(progressBarWidths[currentStoryIndex], {
+      toValue: width / numStories - 4,
       duration: 10000, // 10 seconds
       useNativeDriver: false,
     }).start();
   };
 
   const handleSwipe = (direction: string) => {
-    progressBarWidth.setValue(0); // Reset the progress bar when changing stories
+    progressBarWidths[currentStoryIndex].setValue(0);
 
     if (direction === 'left') {
       if (currentStoryIndex < storyData[currentIndex].stories.length - 1) {
@@ -76,13 +79,38 @@ export const StoryViewer = ({
         </View>
       )}
 
-      {/* Story Progress Indicator */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBarBackground} />
-
-        <Animated.View
-          style={[styles.progressBarFill, {width: progressBarWidth}]}
-        />
+      {/* Story Progress Indicators */}
+      <View style={styles.progressBarsContainer}>
+        {storyData[currentIndex].stories.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.progressBarWrapper,
+              {
+                width: width / numStories,
+              },
+            ]}>
+            <View
+              style={[
+                styles.progressBarBackground,
+                {
+                  backgroundColor:
+                    index < currentStoryIndex ? '#8F00DB' : '#ADADAD',
+                },
+              ]}
+            />
+            <Animated.View
+              style={[
+                styles.progressBarFill,
+                {
+                  width: progressBarWidths[index],
+                  backgroundColor:
+                    index === currentStoryIndex ? '#8F00DB' : '#ADADAD',
+                },
+              ]}
+            />
+          </View>
+        ))}
       </View>
 
       <View style={styles.header}>
@@ -139,27 +167,29 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  progressBarContainer: {
+  progressBarsContainer: {
     position: 'absolute',
-    top: 80,
+    top: 60,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progressBarWrapper: {
     height: 4,
-    width: width,
-    borderRadius: 4,
-    overflow: 'hidden',
+    marginHorizontal: 2,
   },
   progressBarBackground: {
     backgroundColor: '#ADADAD',
-    height: '100%',
     width: '100%',
+    height: '100%',
   },
   progressBarFill: {
     position: 'absolute',
-    backgroundColor: '#8F00DB',
     height: '100%',
   },
   header: {
     position: 'absolute',
-    top: 40,
+    top: 120,
     left: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -187,7 +217,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    top: 120,
     right: 20,
     zIndex: 123,
   },
