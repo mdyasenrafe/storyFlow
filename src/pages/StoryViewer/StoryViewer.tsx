@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,10 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {RootNavigationProp} from '../../../types';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {LinearGradient} from 'expo-linear-gradient';
 
 const {width, height} = Dimensions.get('window');
 
@@ -23,8 +22,32 @@ export const StoryViewer = ({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
   const currentStory = storyData[currentIndex].stories[currentStoryIndex];
+  const progressBarWidth = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    startProgressBar();
+
+    const timer = setTimeout(() => {
+      handleSwipe('left');
+    }, 10000); // 10 seconds for each story
+
+    return () => {
+      clearTimeout(timer);
+      progressBarWidth.setValue(0); // Reset the progress bar when unmounting
+    };
+  }, [currentStoryIndex, currentIndex]);
+
+  const startProgressBar = () => {
+    Animated.timing(progressBarWidth, {
+      toValue: width,
+      duration: 10000, // 10 seconds
+      useNativeDriver: false,
+    }).start();
+  };
 
   const handleSwipe = (direction: string) => {
+    progressBarWidth.setValue(0); // Reset the progress bar when changing stories
+
     if (direction === 'left') {
       if (currentStoryIndex < storyData[currentIndex].stories.length - 1) {
         setCurrentStoryIndex(prevIndex => prevIndex + 1);
@@ -54,12 +77,14 @@ export const StoryViewer = ({
       )}
 
       {/* Story Progress Indicator */}
-      <LinearGradient
-        colors={['#FF0000', '#FF0000', '#FF0000']}
-        style={styles.progressBar}
-      />
+      <View style={styles.progressBarContainer}>
+        <View style={styles.progressBarBackground} />
 
-      {/* Header Section */}
+        <Animated.View
+          style={[styles.progressBarFill, {width: progressBarWidth}]}
+        />
+      </View>
+
       <View style={styles.header}>
         <Image
           source={{uri: storyData[currentIndex].image}}
@@ -114,12 +139,23 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  progressBar: {
+  progressBarContainer: {
     position: 'absolute',
     top: 80,
     height: 4,
     width: width,
     borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressBarBackground: {
+    backgroundColor: '#ADADAD',
+    height: '100%',
+    width: '100%',
+  },
+  progressBarFill: {
+    position: 'absolute',
+    backgroundColor: '#8F00DB',
+    height: '100%',
   },
   header: {
     position: 'absolute',
@@ -149,19 +185,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
   },
-  viewsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  viewsText: {
-    color: 'white',
-    fontSize: 12,
-    marginLeft: 4,
-  },
   closeButton: {
     position: 'absolute',
     top: 40,
     right: 20,
+    zIndex: 123,
   },
   leftSwipe: {
     position: 'absolute',
