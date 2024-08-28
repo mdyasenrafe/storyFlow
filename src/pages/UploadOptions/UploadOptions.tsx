@@ -2,6 +2,13 @@ import React from 'react';
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Ionicons} from '@expo/vector-icons'; // Import vector icons
+import {
+  useCameraPermissions,
+  useMediaLibraryPermissions,
+} from 'expo-image-picker';
+import {openImagePicker, showDeniedAlert} from '../../utils/mediaHelper';
+import {RootNavigationProp, TStory} from '../../../types';
+import {ImageOrVideo} from 'react-native-image-crop-picker';
 
 // Define types for options
 type Option = {
@@ -23,16 +30,63 @@ const options: Option[] = [
   },
 ];
 
-export const UploadOptions = () => {
+export const UploadOptions = ({
+  navigation,
+  route,
+}: RootNavigationProp<'UploadOptions'>) => {
+  const stories = route.params.storyData;
+  console.log(stories);
+  const [, requestMediaPermission] = useMediaLibraryPermissions();
+  const [, requestCameraPermission] = useCameraPermissions();
+
+  const checkCameraPermission = async () => {
+    const {status} = await requestCameraPermission();
+    if (status === 'denied') {
+      showDeniedAlert();
+    }
+  };
+
   const renderOptionButton = (option: Option) => (
     <TouchableOpacity
       key={option.type}
       style={styles.optionButton}
-      onPress={() => {}}>
+      onPress={openCamera}>
       <Ionicons name={option.icon} size={40} color="white" />
       <Text style={styles.optionLabel}>{option.label}</Text>
     </TouchableOpacity>
   );
+
+  const openCamera = async () => {
+    await checkCameraPermission();
+    try {
+      const response = await openImagePicker();
+      handleImageUpload(response);
+    } catch (e) {
+      console.log('something went wrong');
+    }
+  };
+
+  const handleImageUpload = (imageData: ImageOrVideo) => {
+    const newStory = {
+      id: String(new Date().getTime()),
+      url: imageData.path,
+      type: imageData.mime.startsWith('video') ? 'video' : 'image',
+    };
+
+    const updatedStories = stories.map(story => {
+      if (story.isOwnStory) {
+        return {
+          ...story,
+          stories: [...story.stories, newStory],
+        };
+      }
+      return story;
+    });
+    navigation.navigate('StoryViewer', {
+      storyData: updatedStories as TStory[],
+      initialIndex: 0,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>

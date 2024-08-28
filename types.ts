@@ -7,12 +7,14 @@ export type TStory = {
   name: string;
   image: string;
   isOwnStory?: boolean;
-  stories: Array<{
-    id: string;
-    url: string;
-    type: 'image' | 'video';
-  }>;
+  stories: TMediaItem[];
   createdAt: string;
+};
+
+export type TMediaItem = {
+  id: string;
+  url: string;
+  type: 'image' | 'video';
 };
 
 export type RootStackParamList = {
