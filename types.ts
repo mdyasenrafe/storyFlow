@@ -19,8 +19,8 @@ export type TMediaItem = {
 
 export type RootStackParamList = {
   Story: undefined;
-  StoryViewer: {storyData: TStory[]; initialIndex: number};
-  UploadOptions: {storyData: TStory[]};
+  StoryViewer: {initialIndex: number};
+  UploadOptions: undefined;
 };
 
 export type RootNavigationProp<T extends keyof RootStackParamList> =

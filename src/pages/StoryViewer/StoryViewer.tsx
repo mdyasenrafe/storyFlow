@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {RootNavigationProp} from '../../../types';
+import useStories from '../../hooks/useStories';
 
 const {width, height} = Dimensions.get('window');
 
@@ -17,7 +18,8 @@ export const StoryViewer = ({
   navigation,
   route,
 }: RootNavigationProp<'StoryViewer'>) => {
-  const {storyData, initialIndex} = route.params;
+  const {stories: storyData} = useStories();
+  const {initialIndex} = route.params;
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 

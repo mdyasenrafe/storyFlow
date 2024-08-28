@@ -9,6 +9,7 @@ import {
 import {openImagePicker, showDeniedAlert} from '../../utils/mediaHelper';
 import {RootNavigationProp, TStory} from '../../../types';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
+import useStories from '../../hooks/useStories';
 
 // Define types for options
 type Option = {
@@ -34,8 +35,7 @@ export const UploadOptions = ({
   navigation,
   route,
 }: RootNavigationProp<'UploadOptions'>) => {
-  const stories = route.params.storyData;
-  console.log(stories);
+  const {handleImageUpload} = useStories();
   const [, requestMediaPermission] = useMediaLibraryPermissions();
   const [, requestCameraPermission] = useCameraPermissions();
 
@@ -64,28 +64,6 @@ export const UploadOptions = ({
     } catch (e) {
       console.log('something went wrong');
     }
-  };
-
-  const handleImageUpload = (imageData: ImageOrVideo) => {
-    const newStory = {
-      id: String(new Date().getTime()),
-      url: imageData.path,
-      type: imageData.mime.startsWith('video') ? 'video' : 'image',
-    };
-
-    const updatedStories = stories.map(story => {
-      if (story.isOwnStory) {
-        return {
-          ...story,
-          stories: [...story.stories, newStory],
-        };
-      }
-      return story;
-    });
-    navigation.navigate('StoryViewer', {
-      storyData: updatedStories as TStory[],
-      initialIndex: 0,
-    });
   };
 
   return (
