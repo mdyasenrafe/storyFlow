@@ -6,6 +6,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Story} from './src/pages/Story';
 import {StoryViewer} from './src/pages/StoryViewer';
 import {RootStackParamList} from './types';
+import {UploadOptions} from './src/pages/UploadOptions/UploadOptions';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -19,6 +20,7 @@ const App: React.FC = () => {
           }}>
           <Stack.Screen name="Story" component={Story} />
           <Stack.Screen name="StoryViewer" component={StoryViewer} />
+          <Stack.Screen name="UploadOptions" component={UploadOptions} />
         </Stack.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>

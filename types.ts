@@ -18,6 +18,7 @@ export type TStory = {
 export type RootStackParamList = {
   Story: undefined;
   StoryViewer: {storyData: TStory[]; initialIndex: number};
+  UploadOptions: {storyData: TStory[]};
 };
 
 export type RootNavigationProp<T extends keyof RootStackParamList> =

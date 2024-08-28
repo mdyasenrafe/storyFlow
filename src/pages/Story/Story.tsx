@@ -155,9 +155,15 @@ export const Story = ({navigation}: RootNavigationProp<'Story'>) => {
           }>
           <View style={styles.ownStoryBorder}>
             <Image source={{uri: item.image}} style={styles.storyImage} />
-            <View style={styles.addIconContainer}>
+            <TouchableOpacity
+              style={styles.addIconContainer}
+              onPress={() => {
+                navigation.navigate('UploadOptions', {
+                  storyData: data,
+                });
+              }}>
               <Ionicons name="add-circle" size={24} color="red" />
-            </View>
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       ) : (
