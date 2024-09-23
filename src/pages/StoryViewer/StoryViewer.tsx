@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {RootNavigationProp} from '../../../types';
+import {Video} from 'expo-av'; // Import the Video component from expo-av
 import useStories from '../../hooks/useStories';
 
 const {width, height} = Dimensions.get('window');
@@ -75,10 +76,14 @@ export const StoryViewer = ({
       {currentStory.type === 'image' ? (
         <Image source={{uri: currentStory.url}} style={styles.image} />
       ) : (
-        // Replace this with a Video component for real video rendering
-        <View style={styles.videoPlaceholder}>
-          <Text style={styles.videoText}>Video Placeholder</Text>
-        </View>
+        <Video
+          source={{uri: currentStory.url}}
+          style={styles.video}
+          useNativeControls={false}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+        />
       )}
 
       {/* Story Progress Indicators */}
@@ -158,16 +163,9 @@ const styles = StyleSheet.create({
     height: height,
     resizeMode: 'cover',
   },
-  videoPlaceholder: {
+  video: {
     width: width,
     height: height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'gray',
-  },
-  videoText: {
-    color: 'white',
-    fontSize: 18,
   },
   progressBarsContainer: {
     position: 'absolute',
