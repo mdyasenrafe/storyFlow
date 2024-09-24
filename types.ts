@@ -8,13 +8,13 @@ export type TStory = {
   image: string;
   isOwnStory?: boolean;
   stories: TMediaItem[];
-  createdAt: string;
 };
 
 export type TMediaItem = {
   id: string;
   url: string;
   type: 'image' | 'video';
+  createdAt: string;
 };
 
 export type RootStackParamList = {

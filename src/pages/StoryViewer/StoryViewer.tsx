@@ -127,9 +127,7 @@ export const StoryViewer = ({
         />
         <View style={styles.headerText}>
           <Text style={styles.name}>{storyData[currentIndex].name}</Text>
-          <Text style={styles.timeText}>
-            {storyData[currentIndex].createdAt}
-          </Text>
+          <Text style={styles.timeText}>{currentStory.createdAt}</Text>
         </View>
       </View>
 

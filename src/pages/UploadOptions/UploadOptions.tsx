@@ -6,27 +6,45 @@ import {
   useCameraPermissions,
   useMediaLibraryPermissions,
 } from 'expo-image-picker';
-import {openImagePicker, showDeniedAlert} from '../../utils/mediaHelper';
+import {
+  getMediaFromGallery,
+  openImagePicker,
+  showDeniedAlert,
+} from '../../utils/mediaHelper';
 import {RootNavigationProp, TStory} from '../../../types';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useStories from '../../hooks/useStories';
 
 // Define types for options
 type Option = {
-  type: 'camera' | 'video';
-  icon: 'camera-outline' | 'videocam-outline';
+  type: 'click' | 'record' | 'photo' | 'video';
+  icon:
+    | 'camera-outline'
+    | 'videocam-outline'
+    | 'image-outline'
+    | 'folder-outline';
   label: string;
 };
 
 const options: Option[] = [
   {
-    type: 'camera',
+    type: 'click',
     icon: 'camera-outline',
-    label: 'Camera',
+    label: 'Click',
+  },
+  {
+    type: 'record',
+    icon: 'videocam-outline',
+    label: 'Record',
+  },
+  {
+    type: 'photo',
+    icon: 'image-outline',
+    label: 'Photo',
   },
   {
     type: 'video',
-    icon: 'videocam-outline',
+    icon: 'folder-outline',
     label: 'Video',
   },
 ];
@@ -39,10 +57,55 @@ export const UploadOptions = ({
   const [, requestMediaPermission] = useMediaLibraryPermissions();
   const [, requestCameraPermission] = useCameraPermissions();
 
-  const checkCameraPermission = async () => {
+  const checkMediaPermission = async () => {
+    const {status} = await requestMediaPermission();
+    if (status === 'denied') {
+      showDeniedAlert();
+    }
+  };
+
+  const openCamera = async (handleImageUpload: Function) => {
     const {status} = await requestCameraPermission();
     if (status === 'denied') {
       showDeniedAlert();
+    } else {
+      try {
+        const response = await openImagePicker();
+        handleImageUpload(response);
+      } catch (e) {
+        console.log('something went wrong');
+      }
+    }
+  };
+
+  const handlePhotoSelection = async (handleImageUpload: Function) => {
+    try {
+      await checkMediaPermission();
+      const result = await getMediaFromGallery();
+      handleImageUpload(result);
+    } catch (error) {
+      console.log('Error picking photo:', error);
+    }
+  };
+  const handleVideoSelection = async (handleImageUpload: Function) => {
+    console.log('Record or Select Video');
+  };
+  const handleOptionPress = async (option: Option) => {
+    switch (option.type) {
+      case 'click':
+        await openCamera(handleImageUpload);
+        break;
+      case 'photo':
+        await handlePhotoSelection(handleImageUpload);
+        break;
+      case 'record':
+        await handleVideoSelection(handleImageUpload);
+        break;
+      case 'video':
+        console.log('Video option selected');
+        break;
+      default:
+        break;
     }
   };
 
@@ -50,30 +113,16 @@ export const UploadOptions = ({
     <TouchableOpacity
       key={option.type}
       style={styles.optionButton}
-      onPress={openCamera}>
+      onPress={() => handleOptionPress(option)}>
       <Ionicons name={option.icon} size={40} color="white" />
       <Text style={styles.optionLabel}>{option.label}</Text>
     </TouchableOpacity>
   );
 
-  const openCamera = async () => {
-    await checkCameraPermission();
-    try {
-      const response = await openImagePicker();
-      handleImageUpload(response);
-    } catch (e) {
-      console.log('something went wrong');
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => {
-          /* Add back navigation here */
-        }}>
+      <TouchableOpacity style={styles.backButton} onPress={() => {}}>
         <Ionicons name="arrow-back" size={24} color="white" />
         <Text style={styles.backText}>Back</Text>
       </TouchableOpacity>
@@ -86,7 +135,6 @@ export const UploadOptions = ({
         </Text>
       </View>
 
-      {/* Option Buttons */}
       <View style={styles.optionsContainer}>
         {options.map(renderOptionButton)}
       </View>
@@ -129,8 +177,8 @@ const styles = StyleSheet.create({
   optionButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     backgroundColor: '#333',
     borderRadius: 10,
     marginVertical: 8,
