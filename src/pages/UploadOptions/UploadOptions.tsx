@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Ionicons} from '@expo/vector-icons'; // Import vector icons
+import {Ionicons} from '@expo/vector-icons';
 import {
   useCameraPermissions,
   useMediaLibraryPermissions,
@@ -81,14 +81,20 @@ export const UploadOptions = ({
   const handlePhotoSelection = async (handleImageUpload: Function) => {
     try {
       await checkMediaPermission();
-      const result = await getMediaFromGallery();
+      const result = await getMediaFromGallery('photo');
       handleImageUpload(result);
     } catch (error) {
       console.log('Error picking photo:', error);
     }
   };
   const handleVideoSelection = async (handleImageUpload: Function) => {
-    console.log('Record or Select Video');
+    try {
+      await checkMediaPermission();
+      const result = await getMediaFromGallery('video');
+      handleImageUpload(result);
+    } catch (error) {
+      console.log('Error picking video:', error);
+    }
   };
   const handleOptionPress = async (option: Option) => {
     switch (option.type) {
@@ -102,7 +108,7 @@ export const UploadOptions = ({
         await handleVideoSelection(handleImageUpload);
         break;
       case 'video':
-        console.log('Video option selected');
+        handleVideoSelection(handleImageUpload);
         break;
       default:
         break;

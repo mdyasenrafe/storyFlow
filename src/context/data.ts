@@ -77,13 +77,13 @@ export const Stories: TStory[] = [
         id: 'story1',
         url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         type: 'image',
-        createdAt: moment().subtract(10, 'hours').fromNow(), // Added createdAt
+        createdAt: moment().subtract(10, 'hours').fromNow(),
       },
       {
         id: 'story2',
         url: 'https://www.w3schools.com/html/movie.mp4',
         type: 'video',
-        createdAt: moment().subtract(10, 'hours').fromNow(), // Added createdAt
+        createdAt: moment().subtract(10, 'hours').fromNow(),
       },
     ],
   },

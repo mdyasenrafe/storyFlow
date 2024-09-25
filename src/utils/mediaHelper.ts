@@ -44,24 +44,32 @@ export const openImagePicker = async (): Promise<ImageOrVideo> => {
 };
 
 export const getMediaFromGallery = async (
+  type: 'photo' | 'video' = 'photo',
   square: boolean = false,
 ): Promise<MultiMediaUploadResult> => {
   let dimensions = {width: 600, height: 1200};
-  if (square) {
+  if (square && type === 'photo') {
     dimensions = {width: 600, height: 600};
   }
 
   let options: Parameters<typeof ImagePicker.openPicker>[0] = {
-    mediaType: 'photo',
-    width: dimensions.width,
-    height: dimensions.height,
-    cropping: true,
-    compressImageQuality: COMPRESS_SIZE,
+    mediaType: type,
   };
+
+  if (type === 'photo') {
+    options = {
+      ...options,
+      width: dimensions.width,
+      height: dimensions.height,
+      compressImageQuality: COMPRESS_SIZE,
+      cropping: true,
+    };
+  }
 
   const result = await ImagePicker.openPicker({
     ...options,
   });
+
   const sourceUrl = 'file://' + result.path;
   const id = (Math.random() + 1).toString(36).substring(7);
 
@@ -116,6 +124,7 @@ export const showDeniedAlert = () => {
     {cancelable: false},
   );
 };
+
 export const openSettings = () => {
   Linking.openSettings();
 };
